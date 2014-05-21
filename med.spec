@@ -1,11 +1,16 @@
 Name:           med
 Version:        3.0.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
 URL:            http://www.code-aster.org/outils/med/
 Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}.tar.gz
+
+# Chars are unsigned on arm, but the tests do not appear to expect this
+# Patch generated via
+#    find . -type f -name test*.sh -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
+Patch0:   med-3.0.7_tests.patch
 
 BuildRequires:  hdf5-devel
 BuildRequires:  gcc-gfortran
@@ -128,6 +133,9 @@ make check
 
 
 %changelog
+* Wed May 21 2014 Sandro Mani <manisandro@gmail.com> - 3.0.7-4
+- Fix tests on arm
+
 * Tue May 20 2014 Sandro Mani <manisandro@gmail.com> - 3.0.7-3
 - Removed -Wl,--as-needed again
 - Fixed license LGPLv3 -> LGPLv3+
