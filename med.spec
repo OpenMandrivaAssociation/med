@@ -9,7 +9,7 @@ Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}
 
 # Chars are unsigned on arm, but the tests do not appear to expect this
 # Patch generated via
-#    find . -type f -name test*.sh -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
+#    find . -type f -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
 Patch0:   med-3.0.7_tests.patch
 
 BuildRequires:  hdf5-devel
