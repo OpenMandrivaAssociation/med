@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.0.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -133,6 +133,9 @@ make check
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.7-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Wed May 21 2014 Sandro Mani <manisandro@gmail.com> - 3.0.7-4
 - Fix tests on arm
 
