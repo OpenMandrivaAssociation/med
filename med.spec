@@ -11,11 +11,18 @@ Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}
 # Patch generated via
 #    find . -type f -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
 Patch0:   med-3.0.7_tests.patch
+%if 0%{?el6}
+# Automake in el6 does not understand serial-tests
+Patch1:   med-3.0.7_serial-tests.patch
+# Fix syntax in med_check_swig.m4
+Patch2:   med-3.0.7_check-swig.patch
+%endif
 
 BuildRequires:  hdf5-devel
 BuildRequires:  gcc-gfortran
 BuildRequires:  swig
 BuildRequires:  python2-devel
+BuildRequires:  zlib-devel
 
 # For autoreconf
 BuildRequires: autoconf automake libtool
@@ -66,7 +73,12 @@ The %{name}-doc package contains the documentation for %{name}.
 
 
 %prep
-%autosetup -p1 -n %{name}-%{version}_SRC
+%setup -q -n %{name}-%{version}_SRC
+%patch0 -p1
+%if 0%{?el6}
+%patch1 -p1
+%patch2 -p1
+%endif
 
 # Fix file not utf8
 iconv --from=ISO-8859-1 --to=UTF-8 ChangeLog > ChangeLog.new && \

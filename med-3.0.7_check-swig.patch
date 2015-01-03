@@ -1,0 +1,12 @@
+diff -rupN med-3.0.7_SRC/config/med_check_swig.m4 med-3.0.7_SRC-new/config/med_check_swig.m4
+--- med-3.0.7_SRC/config/med_check_swig.m4	2013-10-22 14:38:08.000000000 +0200
++++ med-3.0.7_SRC-new/config/med_check_swig.m4	2015-01-03 19:24:13.966353105 +0100
+@@ -53,7 +53,7 @@ AC_DEFUN([MED_CHECK_SWIG],
+     test -n "${SWIG}" && WITH_SWIG=1
+     eval "${SWIG} -help >/dev/null 2>&1" && WITH_SWIG=1
+     # fi
+- ],[
++ ],[:
+  ])
+ 
+   AC_SUBST(SWIG)
