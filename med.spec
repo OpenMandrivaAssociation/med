@@ -1,6 +1,6 @@
 Name:           med
-Version:        3.0.7
-Release:        7%{?dist}
+Version:        3.0.8
+Release:        1%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -127,8 +127,11 @@ make check
 
 
 %files
-%doc AUTHORS ChangeLog COPYING.LESSER README
-%{_libdir}/*.so.*
+%doc AUTHORS ChangeLog  README
+%license COPYING.LESSER
+%{_libdir}/libmed.so.1*
+%{_libdir}/libmedC.so.1*
+%{_libdir}/libmedimport.so.0*
 
 %files -n python-%{name}
 %{python_sitearch}/%{name}/
@@ -141,10 +144,14 @@ make check
 %{_includedir}/*
 
 %files doc
-%doc COPYING.LESSER installed_docs/*
+%doc installed_docs/*
+%license COPYING.LESSER
 
 
 %changelog
+* Wed Mar 25 2015 Sandro Mani <manisandro@gmail.com> - 3.0.8-1
+- Update to 3.0.8
+
 * Wed Jan 07 2015 Orion Poplawski <orion@cora.nwra.com> - 3.0.7-7
 - Rebuild for hdf5 1.8.14
 
