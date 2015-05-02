@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -149,6 +149,9 @@ make check
 
 
 %changelog
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 3.0.8-2
+- Rebuilt for GCC 5 C++11 ABI change
+
 * Wed Mar 25 2015 Sandro Mani <manisandro@gmail.com> - 3.0.8-1
 - Update to 3.0.8
 
