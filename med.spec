@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.0.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -149,6 +149,9 @@ make check
 
 
 %changelog
+* Sun May 17 2015 Orion Poplawski <orion@cora.nwra.com> - 3.0.8-3
+- Rebuild for hdf5 1.8.15
+
 * Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 3.0.8-2
 - Rebuilt for GCC 5 C++11 ABI change
 
