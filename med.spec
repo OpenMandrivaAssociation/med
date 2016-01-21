@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.0.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -149,6 +149,9 @@ make check
 
 
 %changelog
+* Thu Jan 21 2016 Orion Poplawski <orion@cora.nwra.com> - 3.0.8-5
+- Rebuild for hdf5 1.8.16
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.8-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
