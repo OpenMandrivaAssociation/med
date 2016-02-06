@@ -1,21 +1,23 @@
 Name:           med
-Version:        3.0.8
-Release:        6%{?dist}
+Version:        3.1.0
+Release:        1%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
-URL:            http://www.code-aster.org/outils/med/
+URL:            http://www.code-aster.org/V2/spip.php?article275
 Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}.tar.gz
 
 # Chars are unsigned on arm, but the tests do not appear to expect this
 # Patch generated via
 #    find . -type f -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
-Patch0:   med-3.0.7_tests.patch
+Patch0:         med-3.0.7_tests.patch
+# Remove code with invalid syntax (probably was meant to be commented)
+Patch1:         med-3.1.0_invalid-syntax.patch
 %if 0%{?el6}
 # Automake in el6 does not understand serial-tests
-Patch1:   med-3.0.7_serial-tests.patch
+Patch2:         med-3.0.7_serial-tests.patch
 # Fix syntax in med_check_swig.m4
-Patch2:   med-3.0.7_check-swig.patch
+Patch3:         med-3.0.7_check-swig.patch
 %endif
 
 BuildRequires:  hdf5-devel
@@ -34,11 +36,13 @@ and Data Exchange) is a library to store and exchange meshed data or
 computation results. It uses the HDF5 file format to store the data.
 
 
-%package -n     python-%{name}
+%package -n     python2-%{name}
 Summary:        Python bindings for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Obsoletes:      python-%{name} < 3.1.0-1
+Provides:       python-%{name} = %{version}
 
-%description -n python-%{name}
+%description -n python2-%{name}
 The python-%{name} package contains python bindings for %{name}.
 
 
@@ -75,9 +79,10 @@ The %{name}-doc package contains the documentation for %{name}.
 %prep
 %setup -q -n %{name}-%{version}_SRC
 %patch0 -p1
-%if 0%{?el6}
 %patch1 -p1
+%if 0%{?el6}
 %patch2 -p1
+%patch3 -p1
 %endif
 
 # Fix file not utf8
@@ -89,7 +94,7 @@ mv ChangeLog.new ChangeLog
 %build
 # To remove rpath
 autoreconf -ivf
-%configure --disable-static
+%configure --with-swig --disable-static
 make %{?_smp_mflags}
 
 
@@ -133,11 +138,13 @@ make check
 %{_libdir}/libmedC.so.1*
 %{_libdir}/libmedimport.so.0*
 
-%files -n python-%{name}
-%{python_sitearch}/%{name}/
+%files -n python2-%{name}
+%{python2_sitearch}/%{name}/
 
 %files tools
-%{_bindir}/*
+%{_bindir}/*mdump*
+%{_bindir}/medconforme
+%{_bindir}/medimport
 
 %files devel
 %{_libdir}/*.so
@@ -149,6 +156,9 @@ make check
 
 
 %changelog
+* Sat Feb 06 2016 Sandro Mani <manisandro@gmail.com> - 3.1.0-1
+- Update to 3.1.0
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 3.0.8-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
