@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -95,7 +95,7 @@ mv ChangeLog.new ChangeLog
 # To remove rpath
 autoreconf -ivf
 %configure --with-swig --disable-static
-make %{?_smp_mflags}
+%make_build
 
 
 %install
@@ -156,6 +156,9 @@ make check
 
 
 %changelog
+* Wed Feb 01 2017 Sandro Mani <manisandro@gmail.com> - 3.2.0-2
+- Rebuild (gfortran)
+
 * Mon Oct 03 2016 Sandro Mani <manisandro@gmail.com> - 3.2.0-1
 - Update to 3.2.0
 
