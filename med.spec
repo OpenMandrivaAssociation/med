@@ -1,18 +1,18 @@
 Name:           med
-Version:        3.2.0
-Release:        3%{?dist}
+Version:        3.2.1
+Release:        1%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
-URL:            http://www.code-aster.org/V2/spip.php?article275
+URL:            http://files.salome-platform.org/Salome/other/med-3.2.1.tar.gz
 Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}.tar.gz
 
 # Chars are unsigned on arm, but the tests do not appear to expect this
 # Patch generated via
 #    find . -type f -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
 Patch0:         med-3.0.7_tests.patch
-# Remove code with invalid syntax (probably was meant to be commented)
-Patch1:         med-3.1.0_invalid-syntax.patch
+# Look for hdf5.h when location hdf5, H5pubconf.h name is arch-dependent on Fedora (i.e. H5pubconf-64.h)
+Patch1:         med-3.2.1_hdf5.patch
 %if 0%{?el6}
 # Automake in el6 does not understand serial-tests
 Patch2:         med-3.0.7_serial-tests.patch
@@ -77,7 +77,7 @@ The %{name}-doc package contains the documentation for %{name}.
 
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}_SRC
 %patch0 -p1
 %patch1 -p1
 %if 0%{?el6}
@@ -156,6 +156,9 @@ make check
 
 
 %changelog
+* Sat May 06 2017 Sandro Mani <manisandro@gmail.com> - 3.2.1-1
+- Update to 3.2.1
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 

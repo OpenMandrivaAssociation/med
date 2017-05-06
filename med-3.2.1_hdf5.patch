@@ -1,0 +1,39 @@
+diff -rupN med-3.2.1_SRC/config/med_check_hdf5.m4 med-3.2.1_SRC-new/config/med_check_hdf5.m4
+--- med-3.2.1_SRC/config/med_check_hdf5.m4	2016-10-12 16:30:30.000000000 +0200
++++ med-3.2.1_SRC-new/config/med_check_hdf5.m4	2017-05-06 18:53:52.479809393 +0200
+@@ -67,13 +67,13 @@ dnl #Vérify that the hdf5 directory str
+        hdf5home_save=$hdf5home
+        #if user has provided a specific hdf5 path for include or lib don't try to guess specific system path
+        if test "x$with_hdf5_include" = "xno" && test "x$with_hdf5_lib" = "xno"; then
+-         #Search for H5pubconf.h in $hdf5home and some other standard paths if user doesn't provide hdf5_include
+-       	# H5pubconf.h is used further to detect serial or parallel hdf5 
++         #Search for hdf5.h in $hdf5home and some other standard paths if user doesn't provide hdf5_include
++       	# hdf5.h is used further to detect serial or parallel hdf5
+        	#Cette approche ne prend pas en compte CPPFLAGS, inconvénient mineur de  au vu du test d'arborescence précédent
+          for hdf5home in "$hdf5home_save" "$hdf5home_save/lib/x86_64-linux-gnu/hdf5/serial/"  "$hdf5home_save/lib/x86_64-linux-gnu/hdf5/parallel/"
+          do
+-          AC_MSG_NOTICE([Trying $hdf5home home path for searching H5pubconf.h file.])
+-          test -e $hdf5home/include/H5pubconf.h && found_H5pubconf_h=yes && break
++          AC_MSG_NOTICE([Trying $hdf5home home path for searching hdf5.h file.])
++          test -e $hdf5home/include/hdf5.h && found_H5pubconf_h=yes && break
+          done
+        fi
+ 
+@@ -82,7 +82,7 @@ dnl #Vérify that the hdf5 directory str
+          AC_MSG_ERROR([The directory hdf5 include |$hdf5include| doesn't exist, please verify either HDF5HOME, --with-hdf5=<path> or --with-hdf5-include])
+        fi
+        
+-       test ! "x$found_H5pubconf_h" = "xyes" || test -e ${hdf5include}/H5pubconf.h || AC_MSG_ERROR([Can't find H5pubconf.h file, please verify either HDF5HOME, --with-hdf5=<path> or --with-hdf5-include.])
++       test ! "x$found_H5pubconf_h" = "xyes" || test -e ${hdf5include}/hdf5.h || AC_MSG_ERROR([Can't find hdf5.h file, please verify either HDF5HOME, --with-hdf5=<path> or --with-hdf5-include.])
+ 	
+        test "x$with_hdf5_lib" = "xno" && hdf5lib=$hdf5home/lib || hdf5lib=$with_hdf5_lib
+        if test ! -d "$hdf5lib" ; then
+@@ -106,7 +106,7 @@ AC_DEFUN([MED_CHECK_HDF5],dnl
+ [
+ #La localisation d'hdf5 doit être établie avant
+ AC_REQUIRE([_MED_BEFORE_ENABLE_PMED])
+-#de tester l'aspect parallel de la bibliothèque (H5pubconf.h).
++#de tester l'aspect parallel de la bibliothèque (hdf5.h).
+ AC_REQUIRE([MED_ENABLE_PMED])
+ 
+ AC_REQUIRE([AC_PROG_SED])
