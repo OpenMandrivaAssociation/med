@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.2.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -156,6 +156,9 @@ make check
 
 
 %changelog
+* Mon Feb 05 2018 Jitka Plesnikova <jplesnik@redhat.com> - 3.2.1-4
+- Rebuild for new gfortran
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 3.2.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
