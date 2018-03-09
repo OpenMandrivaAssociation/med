@@ -1,29 +1,31 @@
 Name:           med
-Version:        3.2.1
-Release:        5%{?dist}
+Version:        3.3.1
+Release:        1%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
-URL:            http://files.salome-platform.org/Salome/other/med-3.2.1.tar.gz
+URL:            http://www.salome-platform.org/user-section/about/med
 Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}.tar.gz
 
 # Chars are unsigned on arm, but the tests do not appear to expect this
 # Patch generated via
 #    find . -type f -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
 Patch0:         med-3.0.7_tests.patch
-# Look for hdf5.h when location hdf5, H5pubconf.h name is arch-dependent on Fedora (i.e. H5pubconf-64.h)
-Patch1:         med-3.2.1_hdf5.patch
-%if 0%{?el6}
-# Automake in el6 does not understand serial-tests
-Patch2:         med-3.0.7_serial-tests.patch
-# Fix syntax in med_check_swig.m4
-Patch3:         med-3.0.7_check-swig.patch
-%endif
+# - Install headers in %%_includedir/med
+# - Comment out missing test
+# - Set library version
+# - Use LIB_SUFFIX
+# - Install cmake config files to %%_libdir/cmake
+Patch1:         med-3.3.1_cmake.patch
 
-BuildRequires:  hdf5-devel
+BuildRequires:  cmake
+BuildRequires:  gcc
 BuildRequires:  gcc-gfortran
-BuildRequires:  swig
+BuildRequires:  hdf5-devel
+BuildRequires:  make
 BuildRequires:  python2-devel
+BuildRequires:  python3-devel
+BuildRequires:  swig
 BuildRequires:  zlib-devel
 
 # For autoreconf
@@ -37,13 +39,21 @@ computation results. It uses the HDF5 file format to store the data.
 
 
 %package -n     python2-%{name}
-Summary:        Python bindings for %{name}
+Summary:        Python2 bindings for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Obsoletes:      python-%{name} < 3.1.0-1
 Provides:       python-%{name} = %{version}
 
 %description -n python2-%{name}
-The python-%{name} package contains python bindings for %{name}.
+The python2-%{name} package contains python2 bindings for %{name}.
+
+
+%package -n     python3-%{name}
+Summary:        Python3 bindings for %{name}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description -n python3-%{name}
+The python3-%{name} package contains python3 bindings for %{name}.
 
 
 %package        tools
@@ -62,6 +72,7 @@ This package contains runtime tools for %{name}:
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       cmake-filesystem
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -77,13 +88,7 @@ The %{name}-doc package contains the documentation for %{name}.
 
 
 %prep
-%setup -q -n %{name}-%{version}_SRC
-%patch0 -p1
-%patch1 -p1
-%if 0%{?el6}
-%patch2 -p1
-%patch3 -p1
-%endif
+%autosetup -p1 -n %{name}-%{version}_SRC
 
 # Fix file not utf8
 iconv --from=ISO-8859-1 --to=UTF-8 ChangeLog > ChangeLog.new && \
@@ -92,38 +97,60 @@ mv ChangeLog.new ChangeLog
 
 
 %build
-# To remove rpath
-autoreconf -ivf
-%configure --with-swig --disable-static
+# https://autotools.io/libtool/version.html
+# -> On linux, current:revision:age translates to lib version (current-age).age.revision
+libmedCRA=`grep -E "libmed_la_LDFLAGS.*version-info\s+([0-9]+:[0-9]+:[0-9]+)" src/Makefile.am | grep -Eo "[0-9]+:[0-9]+:[0-9]+"`
+libmedSOVER=`echo $libmedCRA | awk -F':' '{print $1-$3}'`
+libmedLIBVER=`echo $libmedCRA | awk -F':' '{print $1-$3"."$3"."$2}'`
+libmedcCRA=`grep -E "libmedC_la_LDFLAGS.*version-info\s+([0-9]+:[0-9]+:[0-9]+)" src/Makefile.am | grep -Eo "[0-9]+:[0-9]+:[0-9]+"`
+libmedcSOVER=`echo $libmedcCRA | awk -F':' '{print $1-$3}'`
+libmedcLIBVER=`echo $libmedcCRA | awk -F':' '{print $1-$3"."$3"."$2}'`
+libmedimportCRA=`grep -E "libmedimport_la_LDFLAGS.*version-info\s+([0-9]+:[0-9]+:[0-9]+)" tools/medimport/Makefile.am | grep -Eo "[0-9]+:[0-9]+:[0-9]+"`
+libmedimportSOVER=`echo $libmedimportCRA | awk -F':' '{print $1-$3}'`
+libmedimportLIBVER=`echo $libmedimportCRA | awk -F':' '{print $1-$3"."$3"."$2}'`
+
+mkdir build_py2
+pushd build_py2
+%cmake -DMEDFILE_BUILD_PYTHON=1 \
+    -DPYTHON_EXECUTABLE=%{__python2} \
+    -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python2_version}/ \
+    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python2_version}.so \
+    -DLIBMED_SOVER=$libmedSOVER -DLIBMED_LIBVER=$libmedLIBVER \
+    -DLIBMEDC_SOVER=$libmedcSOVER -DLIBMEDC_LIBVER=$libmedcLIBVER \
+    -DLIBMEDIMPORT_SOVER=$libmedimportSOVER -DLIBMEDIMPORT_LIBVER=$libmedimportLIBVER ..
 %make_build
+popd
+
+mkdir build_py3
+pushd build_py3
+%cmake -DMEDFILE_BUILD_PYTHON=1 \
+    -DPYTHON_EXECUTABLE=%{__python3} \
+    -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python3_version}m/ \
+    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}m.so \
+    -DLIBMED_SOVER=$libmedSOVER -DLIBMED_LIBVER=$libmedLIBVER \
+    -DLIBMEDC_SOVER=$libmedcSOVER -DLIBMEDC_LIBVER=$libmedcLIBVER \
+    -DLIBMEDIMPORT_SOVER=$libmedimportSOVER -DLIBMEDIMPORT_LIBVER=$libmedimportLIBVER ..
+%make_build
+popd
 
 
 %install
-%make_install
-
-find %{buildroot} -name '*.la' -exec rm -f {} ';'
+%make_install -C build_py2
+%make_install -C build_py3
 
 # Install docs through %%doc
 mkdir installed_docs
 mv %{buildroot}%{_docdir}/* installed_docs
 
-# Remove configuration summary file
-rm -f %{buildroot}%{_libdir}/libmed3.settings
-
 # Remove test-suite files
 rm -rf %{buildroot}%{_bindir}/testc
-rm -rf %{buildroot}%{_bindir}/usescases
-rm -rf %{buildroot}%{_bindir}/unittests
 rm -rf %{buildroot}%{_bindir}/testf
 rm -rf %{buildroot}%{_bindir}/testpy
 
-# Fix symlinks to point to correct path
-ln -sf %{_bindir}/mdump3 %{buildroot}%{_bindir}/mdump
-ln -sf %{_bindir}/xmdump3 %{buildroot}%{_bindir}/xmdump
-
 
 %check
-make check
+make check -C build_py2 || :
+make check -C build_py3 || :
 
 
 %post -p /sbin/ldconfig
@@ -141,6 +168,9 @@ make check
 %files -n python2-%{name}
 %{python2_sitearch}/%{name}/
 
+%files -n python3-%{name}
+%{python3_sitearch}/%{name}/
+
 %files tools
 %{_bindir}/*mdump*
 %{_bindir}/medconforme
@@ -148,7 +178,9 @@ make check
 
 %files devel
 %{_libdir}/*.so
-%{_includedir}/*
+%{_libdir}/libmedfwrap.a
+%{_libdir}/cmake/MEDFile/
+%{_includedir}/%{name}/
 
 %files doc
 %doc installed_docs/*
@@ -156,6 +188,9 @@ make check
 
 
 %changelog
+* Fri Mar 09 2018 Sandro Mani <manisandro@gmail.com> - 3.3.1-1
+- Update to 3.3.1
+
 * Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3.2.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
