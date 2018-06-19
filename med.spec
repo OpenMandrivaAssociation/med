@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -188,6 +188,9 @@ make check -C build_py3 || :
 
 
 %changelog
+* Tue Jun 19 2018 Miro Hrončok <mhroncok@redhat.com> - 3.3.1-2
+- Rebuilt for Python 3.7
+
 * Fri Mar 09 2018 Sandro Mani <manisandro@gmail.com> - 3.3.1-1
 - Update to 3.3.1
 
