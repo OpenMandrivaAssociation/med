@@ -18,6 +18,7 @@ Patch0:         med-3.0.7_tests.patch
 # - Install cmake config files to %%_libdir/cmake
 Patch1:         med-3.3.1_cmake.patch
 
+BuildRequires:  gcc-c++
 BuildRequires:  cmake
 BuildRequires:  gcc
 BuildRequires:  gcc-gfortran
