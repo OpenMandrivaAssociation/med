@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.3.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -24,7 +24,6 @@ BuildRequires:  gcc
 BuildRequires:  gcc-gfortran
 BuildRequires:  hdf5-devel
 BuildRequires:  make
-BuildRequires:  python2-devel
 BuildRequires:  python3-devel
 BuildRequires:  swig
 BuildRequires:  zlib-devel
@@ -37,16 +36,6 @@ BuildRequires: autoconf automake libtool
 MED-fichier (Modélisation et Echanges de Données, in English Modelisation
 and Data Exchange) is a library to store and exchange meshed data or
 computation results. It uses the HDF5 file format to store the data.
-
-
-%package -n     python2-%{name}
-Summary:        Python2 bindings for %{name}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Obsoletes:      python-%{name} < 3.1.0-1
-Provides:       python-%{name} = %{version}
-
-%description -n python2-%{name}
-The python2-%{name} package contains python2 bindings for %{name}.
 
 
 %package -n     python3-%{name}
@@ -110,18 +99,6 @@ libmedimportCRA=`grep -E "libmedimport_la_LDFLAGS.*version-info\s+([0-9]+:[0-9]+
 libmedimportSOVER=`echo $libmedimportCRA | awk -F':' '{print $1-$3}'`
 libmedimportLIBVER=`echo $libmedimportCRA | awk -F':' '{print $1-$3"."$3"."$2}'`
 
-mkdir build_py2
-pushd build_py2
-%cmake -DMEDFILE_BUILD_PYTHON=1 \
-    -DPYTHON_EXECUTABLE=%{__python2} \
-    -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python2_version}/ \
-    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python2_version}.so \
-    -DLIBMED_SOVER=$libmedSOVER -DLIBMED_LIBVER=$libmedLIBVER \
-    -DLIBMEDC_SOVER=$libmedcSOVER -DLIBMEDC_LIBVER=$libmedcLIBVER \
-    -DLIBMEDIMPORT_SOVER=$libmedimportSOVER -DLIBMEDIMPORT_LIBVER=$libmedimportLIBVER ..
-%make_build
-popd
-
 mkdir build_py3
 pushd build_py3
 %cmake -DMEDFILE_BUILD_PYTHON=1 \
@@ -136,7 +113,6 @@ popd
 
 
 %install
-%make_install -C build_py2
 %make_install -C build_py3
 
 # Install docs through %%doc
@@ -150,7 +126,6 @@ rm -rf %{buildroot}%{_bindir}/testpy
 
 
 %check
-make check -C build_py2 || :
 make check -C build_py3 || :
 
 
@@ -165,9 +140,6 @@ make check -C build_py3 || :
 %{_libdir}/libmed.so.1*
 %{_libdir}/libmedC.so.1*
 %{_libdir}/libmedimport.so.0*
-
-%files -n python2-%{name}
-%{python2_sitearch}/%{name}/
 
 %files -n python3-%{name}
 %{python3_sitearch}/%{name}/
@@ -189,6 +161,9 @@ make check -C build_py3 || :
 
 
 %changelog
+* Wed Oct 03 2018 Miro Hrončok <mhroncok@redhat.com> - 3.3.1-4
+- Remvoe python2 subpackage (#1627343)
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
