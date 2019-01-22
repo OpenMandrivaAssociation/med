@@ -129,9 +129,7 @@ rm -rf %{buildroot}%{_bindir}/testpy
 make check -C build_py3 || :
 
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 
 %files
