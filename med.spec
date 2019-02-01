@@ -1,6 +1,6 @@
 Name:           med
 Version:        3.3.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -159,6 +159,9 @@ make check -C build_py3 || :
 
 
 %changelog
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Wed Oct 03 2018 Miro Hrončok <mhroncok@redhat.com> - 3.3.1-4
 - Remvoe python2 subpackage (#1627343)
 
