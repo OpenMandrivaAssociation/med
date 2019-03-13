@@ -1,6 +1,6 @@
 Name:           med
-Version:        3.3.1
-Release:        5%{?dist}
+Version:        4.0.0
+Release:        1%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -10,13 +10,12 @@ Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}
 # Chars are unsigned on arm, but the tests do not appear to expect this
 # Patch generated via
 #    find . -type f -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
-Patch0:         med-3.0.7_tests.patch
+Patch0:         med_tests.patch
 # - Install headers in %%_includedir/med
-# - Comment out missing test
-# - Set library version
 # - Use LIB_SUFFIX
 # - Install cmake config files to %%_libdir/cmake
-Patch1:         med-3.3.1_cmake.patch
+# - Install doc to %%_pkgdocdir
+Patch1:         med_cmake.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
@@ -78,7 +77,7 @@ The %{name}-doc package contains the documentation for %{name}.
 
 
 %prep
-%autosetup -p1 -n %{name}-%{version}_SRC
+%autosetup -p1 -n %{name}-%{version}
 
 # Fix file not utf8
 iconv --from=ISO-8859-1 --to=UTF-8 ChangeLog > ChangeLog.new && \
@@ -87,50 +86,25 @@ mv ChangeLog.new ChangeLog
 
 
 %build
-# https://autotools.io/libtool/version.html
-# -> On linux, current:revision:age translates to lib version (current-age).age.revision
-libmedCRA=`grep -E "libmed_la_LDFLAGS.*version-info\s+([0-9]+:[0-9]+:[0-9]+)" src/Makefile.am | grep -Eo "[0-9]+:[0-9]+:[0-9]+"`
-libmedSOVER=`echo $libmedCRA | awk -F':' '{print $1-$3}'`
-libmedLIBVER=`echo $libmedCRA | awk -F':' '{print $1-$3"."$3"."$2}'`
-libmedcCRA=`grep -E "libmedC_la_LDFLAGS.*version-info\s+([0-9]+:[0-9]+:[0-9]+)" src/Makefile.am | grep -Eo "[0-9]+:[0-9]+:[0-9]+"`
-libmedcSOVER=`echo $libmedcCRA | awk -F':' '{print $1-$3}'`
-libmedcLIBVER=`echo $libmedcCRA | awk -F':' '{print $1-$3"."$3"."$2}'`
-libmedimportCRA=`grep -E "libmedimport_la_LDFLAGS.*version-info\s+([0-9]+:[0-9]+:[0-9]+)" tools/medimport/Makefile.am | grep -Eo "[0-9]+:[0-9]+:[0-9]+"`
-libmedimportSOVER=`echo $libmedimportCRA | awk -F':' '{print $1-$3}'`
-libmedimportLIBVER=`echo $libmedimportCRA | awk -F':' '{print $1-$3"."$3"."$2}'`
-
-mkdir build_py3
-pushd build_py3
 %cmake -DMEDFILE_BUILD_PYTHON=1 \
     -DPYTHON_EXECUTABLE=%{__python3} \
     -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python3_version}m/ \
-    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}m.so \
-    -DLIBMED_SOVER=$libmedSOVER -DLIBMED_LIBVER=$libmedLIBVER \
-    -DLIBMEDC_SOVER=$libmedcSOVER -DLIBMEDC_LIBVER=$libmedcLIBVER \
-    -DLIBMEDIMPORT_SOVER=$libmedimportSOVER -DLIBMEDIMPORT_LIBVER=$libmedimportLIBVER ..
+    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}m.so  .
 %make_build
-popd
 
 
 %install
-%make_install -C build_py3
-
-# Install docs through %%doc
-mkdir installed_docs
-mv %{buildroot}%{_docdir}/* installed_docs
+%make_install
 
 # Remove test-suite files
 rm -rf %{buildroot}%{_bindir}/testc
 rm -rf %{buildroot}%{_bindir}/testf
 rm -rf %{buildroot}%{_bindir}/testpy
 
-
 %check
-make check -C build_py3 || :
-
+ctest -V || :
 
 %ldconfig_scriptlets
-
 
 %files
 %doc AUTHORS ChangeLog  README
@@ -138,6 +112,7 @@ make check -C build_py3 || :
 %{_libdir}/libmed.so.1*
 %{_libdir}/libmedC.so.1*
 %{_libdir}/libmedimport.so.0*
+%{_libdir}/libmedfwrap.so.11.*
 
 %files -n python3-%{name}
 %{python3_sitearch}/%{name}/
@@ -149,21 +124,23 @@ make check -C build_py3 || :
 
 %files devel
 %{_libdir}/*.so
-%{_libdir}/libmedfwrap.a
 %{_libdir}/cmake/MEDFile/
 %{_includedir}/%{name}/
 
 %files doc
-%doc installed_docs/*
 %license COPYING.LESSER
+%doc %{_pkgdocdir}
 
 
 %changelog
+* Wed Mar 13 2019 Sandro Mani <manisandro@gmail.com> - 4.0.0-1
+- Update to 4.0.0
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
 * Wed Oct 03 2018 Miro Hrončok <mhroncok@redhat.com> - 3.3.1-4
-- Remvoe python2 subpackage (#1627343)
+- Remove python2 subpackage (#1627343)
 
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3.3.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
