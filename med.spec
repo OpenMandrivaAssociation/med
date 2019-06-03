@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -88,8 +88,8 @@ mv ChangeLog.new ChangeLog
 %build
 %cmake -DMEDFILE_BUILD_PYTHON=1 \
     -DPYTHON_EXECUTABLE=%{__python3} \
-    -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python3_version}m/ \
-    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}m.so  .
+    -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python3_version}$(python3-config --abiflags)/ \
+    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}$(python3-config --abiflags).so  .
 %make_build
 
 
@@ -133,6 +133,9 @@ ctest -V || :
 
 
 %changelog
+* Mon Jun 03 2019 Charalampos Stratakis <cstratak@redhat.com> - 4.0.0-2
+- Don't hard-code python's abi flags
+
 * Wed Mar 13 2019 Sandro Mani <manisandro@gmail.com> - 4.0.0-1
 - Update to 4.0.0
 
