@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -133,6 +133,9 @@ ctest -V || :
 
 
 %changelog
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.0.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Mon Jun 03 2019 Charalampos Stratakis <cstratak@redhat.com> - 4.0.0-2
 - Don't hard-code python's abi flags
 
