@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.0.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -133,6 +133,9 @@ ctest -V || :
 
 
 %changelog
+* Thu Jun 25 2020 Orion Poplawski <orion@cora.nwra.com> - 4.0.0-8
+- Rebuild for hdf5 1.10.6
+
 * Tue May 26 2020 Miro Hrončok <mhroncok@redhat.com> - 4.0.0-7
 - Rebuilt for Python 3.9
 
