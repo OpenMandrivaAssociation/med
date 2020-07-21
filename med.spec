@@ -90,11 +90,11 @@ mv ChangeLog.new ChangeLog
     -DPYTHON_EXECUTABLE=%{__python3} \
     -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python3_version}$(python3-config --abiflags)/ \
     -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}$(python3-config --abiflags).so  .
-%make_build
+%cmake_build
 
 
 %install
-%make_install
+%cmake_install
 
 # Remove test-suite files
 rm -rf %{buildroot}%{_bindir}/testc
