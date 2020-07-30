@@ -1,19 +1,19 @@
-diff -rupN med-4.0.0/CMakeLists.txt med-4.0.0-new/CMakeLists.txt
---- med-4.0.0/CMakeLists.txt	2018-12-10 18:41:59.000000000 +0100
-+++ med-4.0.0-new/CMakeLists.txt	2019-03-13 10:59:52.543842255 +0100
-@@ -92,9 +92,9 @@ ENDIF(WIN32)
+diff -rupN --no-dereference med-4.1.0/CMakeLists.txt med-4.1.0-new/CMakeLists.txt
+--- med-4.1.0/CMakeLists.txt	2020-03-12 16:45:46.000000000 +0100
++++ med-4.1.0-new/CMakeLists.txt	2020-07-30 15:16:05.148896436 +0200
+@@ -101,9 +101,9 @@ ENDIF(WIN32)
  IF(WIN32 AND NOT CYGWIN)
     SET(INSTALL_CMAKE_CONFIG_DIR cmake)
  ELSE()
 -   SET(INSTALL_CMAKE_CONFIG_DIR share/cmake/med-fichier-${MED_STR_VERSION})
-+   SET(INSTALL_CMAKE_CONFIG_DIR lib${LIB_SUFFIX}/cmake/${PROJECT_NAME})
++   SET(INSTALL_CMAKE_CONFIG_DIR lib${LIB_SUFFIX}/cmake/MEDFile)
  ENDIF()
 -SET(INSTALL_INCLUDE_DIR include)
 +SET(INSTALL_INCLUDE_DIR include/med)
  
  ## Pre-requisites detection
  # Detect HDF5 first to potentially retrieve MPI automatically:
-@@ -135,8 +135,8 @@ ENDIF()
+@@ -144,8 +144,8 @@ ENDIF()
  
  ## Installation of the doc
  IF(MEDFILE_INSTALL_DOC  OR MEDFILE_BUILD_DOC)
@@ -24,26 +24,26 @@ diff -rupN med-4.0.0/CMakeLists.txt med-4.0.0-new/CMakeLists.txt
  ENDIF()
  
  #######################
-diff -rupN med-4.0.0/config/cmake_files/medMacros.cmake med-4.0.0-new/config/cmake_files/medMacros.cmake
---- med-4.0.0/config/cmake_files/medMacros.cmake	2018-11-05 13:49:21.000000000 +0100
-+++ med-4.0.0-new/config/cmake_files/medMacros.cmake	2019-03-12 18:58:06.528045176 +0100
-@@ -456,9 +456,9 @@ MACRO(INSTALL_AND_COMPILE_PYTHON_FILE PY
+diff -rupN --no-dereference med-4.1.0/config/cmake_files/medMacros.cmake med-4.1.0-new/config/cmake_files/medMacros.cmake
+--- med-4.1.0/config/cmake_files/medMacros.cmake	2020-01-30 17:04:19.000000000 +0100
++++ med-4.1.0-new/config/cmake_files/medMacros.cmake	2020-07-30 15:16:05.148896436 +0200
+@@ -505,9 +505,9 @@ MACRO(INSTALL_AND_COMPILE_PYTHON_FILE PY
    FOREACH(input ${PYFILE2COMPINST})
      GET_FILENAME_COMPONENT(inputname ${input} NAME)
      INSTALL(FILES ${input} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PYFILELOC})
--    INSTALL(CODE "MESSAGE(STATUS \"py compiling ${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}\")")
--    INSTALL(CODE "SET(CMD \"import py_compile ; py_compile.compile('${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}')\")")
+-    INSTALL(CODE "MESSAGE(STATUS \"py compiling \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}\")")
+-    INSTALL(CODE "SET(CMD \"import py_compile ; py_compile.compile('\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}')\")")
 -    INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c \"\${CMD}\")")
 -    INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -O -c \"\${CMD}\")")
-+    #INSTALL(CODE "MESSAGE(STATUS \"py compiling ${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}\")")
-+    #INSTALL(CODE "SET(CMD \"import py_compile ; py_compile.compile('${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}')\")")
-+    #INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c \"\${CMD}\")")
-+    #INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -O -c \"\${CMD}\")")
++#     INSTALL(CODE "MESSAGE(STATUS \"py compiling \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}\")")
++#     INSTALL(CODE "SET(CMD \"import py_compile ; py_compile.compile('\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${PYFILELOC}/${inputname}')\")")
++#     INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c \"\${CMD}\")")
++#     INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -O -c \"\${CMD}\")")
    ENDFOREACH(input ${PYFILE2COMPINST})
  ENDMACRO(INSTALL_AND_COMPILE_PYTHON_FILE PYFILE2COMPINST PYFILELOC)
-diff -rupN med-4.0.0/python/CMakeLists.txt med-4.0.0-new/python/CMakeLists.txt
---- med-4.0.0/python/CMakeLists.txt	2018-11-05 13:49:21.000000000 +0100
-+++ med-4.0.0-new/python/CMakeLists.txt	2019-03-12 18:58:06.528045176 +0100
+diff -rupN --no-dereference med-4.1.0/python/CMakeLists.txt med-4.1.0-new/python/CMakeLists.txt
+--- med-4.1.0/python/CMakeLists.txt	2020-01-30 17:03:53.000000000 +0100
++++ med-4.1.0-new/python/CMakeLists.txt	2020-07-30 15:16:05.148896436 +0200
 @@ -36,7 +36,7 @@ SET(_link_libs
    ${PYTHON_LIBRARIES}
    )
@@ -53,85 +53,10 @@ diff -rupN med-4.0.0/python/CMakeLists.txt med-4.0.0-new/python/CMakeLists.txt
  
  # Ensure we will be able to run the Python tests from the build tree by outputing
  # files into the package folder:
-diff -rupN med-4.0.0/src/CMakeLists.txt med-4.0.0-new/src/CMakeLists.txt
---- med-4.0.0/src/CMakeLists.txt	2018-12-10 18:41:59.000000000 +0100
-+++ med-4.0.0-new/src/CMakeLists.txt	2019-03-12 18:58:06.530045174 +0100
-@@ -83,7 +83,7 @@ IF(MEDFILE_BUILD_SHARED_LIBS)
-   TARGET_LINK_LIBRARIES(medC ${HDF5_LIBS} ${MPI_LIBS})
-   MED_SET_DEFINITIONS(medC NOGDI)
-   
--  INSTALL(TARGETS medC EXPORT ${_export_group} DESTINATION lib)  
-+  INSTALL(TARGETS medC EXPORT ${_export_group} DESTINATION lib${LIB_SUFFIX})
- ENDIF()
- 
- ######### Static Libraries ##########
-@@ -97,7 +97,7 @@ IF(MEDFILE_BUILD_STATIC_LIBS)
-   TARGET_LINK_LIBRARIES(medC_static ${HDF5_LIBS} ${MPI_LIBS})
-   MED_SET_DEFINITIONS(medC_static NOGDI)
-   
--  INSTALL(TARGETS medC_static EXPORT ${_export_group} DESTINATION lib)
-+  INSTALL(TARGETS medC_static EXPORT ${_export_group} DESTINATION lib${LIB_SUFFIX})
- ENDIF()
- 
- ########################### Fortran stuff ###################################
-@@ -113,7 +113,7 @@ IF(CMAKE_Fortran_COMPILER_WORKS)
-       VERSION   11.0.0
-       SOVERSION 11.0.0)
-     TARGET_LINK_LIBRARIES(medfwrap medC)
--    INSTALL(TARGETS medfwrap EXPORT medfileTargetsF DESTINATION lib)
-+    INSTALL(TARGETS medfwrap EXPORT medfileTargetsF DESTINATION lib${LIB_SUFFIX})
- 
-     # Add Shared MED library
-     ADD_LIBRARY(med SHARED MEDiterators.c)
-@@ -124,7 +124,7 @@ IF(CMAKE_Fortran_COMPILER_WORKS)
-     TARGET_LINK_LIBRARIES(med medfwrap)    
-    
-     # Install only the resulting library:
--    INSTALL(TARGETS med EXPORT medTargetsF DESTINATION lib)
-+    INSTALL(TARGETS med EXPORT medTargetsF DESTINATION lib${LIB_SUFFIX})
-   ENDIF()
- 
-   ######### Static Libraries ##########
-@@ -137,7 +137,7 @@ IF(CMAKE_Fortran_COMPILER_WORKS)
-     ADD_LIBRARY(medfwrap_static STATIC ${medfort_wrap_SOURCES})
-     SET_TARGET_PROPERTIES(medfwrap_static PROPERTIES OUTPUT_NAME medfwrap)
-     TARGET_LINK_LIBRARIES(medfwrap_static medC_static)
--    INSTALL(TARGETS medfwrap_static EXPORT medfileTargetsF DESTINATION lib)
-+    INSTALL(TARGETS medfwrap_static EXPORT medfileTargetsF DESTINATION lib${LIB_SUFFIX})
-     
-     # Add Static MED library
-     ADD_LIBRARY(med_static STATIC MEDiterators.c)
-@@ -145,7 +145,7 @@ IF(CMAKE_Fortran_COMPILER_WORKS)
-     TARGET_LINK_LIBRARIES(med_static medfwrap_static)
- 
-     # Install only the resulting library:  
--    INSTALL(TARGETS med_static EXPORT medfileTargetsF DESTINATION lib)
-+    INSTALL(TARGETS med_static EXPORT medfileTargetsF DESTINATION lib${LIB_SUFFIX})
-   ENDIF()
-   
- ENDIF(CMAKE_Fortran_COMPILER_WORKS)
-diff -rupN med-4.0.0/tools/medimport/CMakeLists.txt med-4.0.0-new/tools/medimport/CMakeLists.txt
---- med-4.0.0/tools/medimport/CMakeLists.txt	2018-12-10 18:41:59.000000000 +0100
-+++ med-4.0.0-new/tools/medimport/CMakeLists.txt	2019-03-12 18:58:06.530045174 +0100
-@@ -56,7 +56,7 @@ IF(MEDFILE_BUILD_SHARED_LIBS)
-     SOVERSION 0.3.0)
-   TARGET_LINK_LIBRARIES(medimportengine medC)
-   SET_TARGET_PROPERTIES(medimportengine PROPERTIES OUTPUT_NAME medimport)
--  INSTALL(TARGETS medimportengine DESTINATION lib)
-+  INSTALL(TARGETS medimportengine DESTINATION lib${LIB_SUFFIX})
-   SET(_lib_to_link "medimportengine")
- ENDIF()
- 
-@@ -66,7 +66,7 @@ IF(MEDFILE_BUILD_STATIC_LIBS)
-   TARGET_LINK_LIBRARIES(medimportengine_static medC_static)
-   MED_SET_DEFINITIONS(medimportengine_static MED3_USESTATIC)
-   SET_TARGET_PROPERTIES(medimportengine_static PROPERTIES OUTPUT_NAME medimport)
--  INSTALL(TARGETS medimportengine_static DESTINATION lib)
-+  INSTALL(TARGETS medimportengine_static DESTINATION lib${LIB_SUFFIX})
-   # Give precendence to the shared object for the linking of 
-   # the executable medimport:
-   IF(NOT _lib_to_link)
-@@ -87,4 +87,4 @@ IF(NOT (WIN32 AND MEDFILE_BUILD_STATIC_L
+diff -rupN --no-dereference med-4.1.0/tools/medimport/CMakeLists.txt med-4.1.0-new/tools/medimport/CMakeLists.txt
+--- med-4.1.0/tools/medimport/CMakeLists.txt	2020-03-12 16:45:46.000000000 +0100
++++ med-4.1.0-new/tools/medimport/CMakeLists.txt	2020-07-30 15:16:05.148896436 +0200
+@@ -90,4 +90,4 @@ IF(NOT (WIN32 AND MEDFILE_BUILD_STATIC_L
    INSTALL(TARGETS medimport DESTINATION bin )  
  ENDIF()
  

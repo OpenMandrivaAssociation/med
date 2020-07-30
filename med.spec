@@ -1,21 +1,16 @@
 Name:           med
-Version:        4.0.0
-Release:        9%{?dist}
+Version:        4.1.0
+Release:        1%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
 URL:            http://www.salome-platform.org/user-section/about/med
 Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}.tar.gz
 
-# Chars are unsigned on arm, but the tests do not appear to expect this
-# Patch generated via
-#    find . -type f -print0 | xargs -0 sed -i "s|-e 's/H5T_STD_I8LE//g'|-e 's/H5T_STD_I8LE//g' -e 's/H5T_STD_U8LE//g'|g"
-Patch0:         med_tests.patch
 # - Install headers in %%_includedir/med
-# - Use LIB_SUFFIX
 # - Install cmake config files to %%_libdir/cmake
 # - Install doc to %%_pkgdocdir
-Patch1:         med_cmake.patch
+Patch0:         med_cmake.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
@@ -112,7 +107,7 @@ ctest -V || :
 %{_libdir}/libmed.so.1*
 %{_libdir}/libmedC.so.1*
 %{_libdir}/libmedimport.so.0*
-%{_libdir}/libmedfwrap.so.11.*
+%{_libdir}/libmedfwrap.so.11*
 
 %files -n python3-%{name}
 %{python3_sitearch}/%{name}/
@@ -133,6 +128,9 @@ ctest -V || :
 
 
 %changelog
+* Thu Jul 30 2020 Sandro Mani <manisandro@gmail.com> - 4.1-1
+- Update to 4.1
+
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 4.0.0-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
