@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -128,6 +128,9 @@ ctest -V || :
 
 
 %changelog
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Thu Jul 30 2020 Sandro Mani <manisandro@gmail.com> - 4.1-1
 - Update to 4.1
 
