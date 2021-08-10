@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -128,6 +128,9 @@ ctest -V || :
 
 
 %changelog
+* Tue Aug 10 2021 Orion Poplawski <orion@nwra.com> - 4.1.0-5
+- Rebuild for hdf5 1.10.7
+
 * Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
