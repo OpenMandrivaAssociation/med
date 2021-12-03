@@ -1,6 +1,6 @@
 diff -rupN --no-dereference med-4.1.0/CMakeLists.txt med-4.1.0-new/CMakeLists.txt
 --- med-4.1.0/CMakeLists.txt	2020-03-12 16:45:46.000000000 +0100
-+++ med-4.1.0-new/CMakeLists.txt	2020-07-30 15:16:05.148896436 +0200
++++ med-4.1.0-new/CMakeLists.txt	2021-12-03 09:32:31.544994485 +0100
 @@ -101,9 +101,9 @@ ENDIF(WIN32)
  IF(WIN32 AND NOT CYGWIN)
     SET(INSTALL_CMAKE_CONFIG_DIR cmake)
@@ -26,7 +26,7 @@ diff -rupN --no-dereference med-4.1.0/CMakeLists.txt med-4.1.0-new/CMakeLists.tx
  #######################
 diff -rupN --no-dereference med-4.1.0/config/cmake_files/medMacros.cmake med-4.1.0-new/config/cmake_files/medMacros.cmake
 --- med-4.1.0/config/cmake_files/medMacros.cmake	2020-01-30 17:04:19.000000000 +0100
-+++ med-4.1.0-new/config/cmake_files/medMacros.cmake	2020-07-30 15:16:05.148896436 +0200
++++ med-4.1.0-new/config/cmake_files/medMacros.cmake	2021-12-03 09:32:31.545994485 +0100
 @@ -505,9 +505,9 @@ MACRO(INSTALL_AND_COMPILE_PYTHON_FILE PY
    FOREACH(input ${PYFILE2COMPINST})
      GET_FILENAME_COMPONENT(inputname ${input} NAME)
@@ -43,7 +43,7 @@ diff -rupN --no-dereference med-4.1.0/config/cmake_files/medMacros.cmake med-4.1
  ENDMACRO(INSTALL_AND_COMPILE_PYTHON_FILE PYFILE2COMPINST PYFILELOC)
 diff -rupN --no-dereference med-4.1.0/python/CMakeLists.txt med-4.1.0-new/python/CMakeLists.txt
 --- med-4.1.0/python/CMakeLists.txt	2020-01-30 17:03:53.000000000 +0100
-+++ med-4.1.0-new/python/CMakeLists.txt	2020-07-30 15:16:05.148896436 +0200
++++ med-4.1.0-new/python/CMakeLists.txt	2021-12-03 09:32:31.545994485 +0100
 @@ -36,7 +36,7 @@ SET(_link_libs
    ${PYTHON_LIBRARIES}
    )
@@ -55,7 +55,7 @@ diff -rupN --no-dereference med-4.1.0/python/CMakeLists.txt med-4.1.0-new/python
  # files into the package folder:
 diff -rupN --no-dereference med-4.1.0/tools/medimport/CMakeLists.txt med-4.1.0-new/tools/medimport/CMakeLists.txt
 --- med-4.1.0/tools/medimport/CMakeLists.txt	2020-03-12 16:45:46.000000000 +0100
-+++ med-4.1.0-new/tools/medimport/CMakeLists.txt	2020-07-30 15:16:05.148896436 +0200
++++ med-4.1.0-new/tools/medimport/CMakeLists.txt	2021-12-03 09:32:31.545994485 +0100
 @@ -90,4 +90,4 @@ IF(NOT (WIN32 AND MEDFILE_BUILD_STATIC_L
    INSTALL(TARGETS medimport DESTINATION bin )  
  ENDIF()

@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -11,6 +11,9 @@ Source0:        http://files.salome-platform.org/Salome/other/%{name}-%{version}
 # - Install cmake config files to %%_libdir/cmake
 # - Install doc to %%_pkgdocdir
 Patch0:         med_cmake.patch
+# hdf5-1.12 compatibility
+# https://gist.githubusercontent.com/jedbrown/527ef81ff59a0dccf833da40fdd15a47/raw/7482f9a42fdd277f5f9cf0167ea7a3381032ca7a/hdf5-1.12.patch
+Patch1:         med-hdf5-1.12.patch
 
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
@@ -97,9 +100,8 @@ rm -rf %{buildroot}%{_bindir}/testf
 rm -rf %{buildroot}%{_bindir}/testpy
 
 %check
-ctest -V || :
+%ctest || :
 
-%ldconfig_scriptlets
 
 %files
 %doc AUTHORS ChangeLog  README
@@ -128,6 +130,9 @@ ctest -V || :
 
 
 %changelog
+* Fri Dec 03 2021 Sandro Mani <manisandro@gmail.com> - 4.1.0-3
+- Port to hdf5-1.12
+
 * Tue Aug 10 2021 Orion Poplawski <orion@nwra.com> - 4.1.0-5
 - Rebuild for hdf5 1.10.7
 
