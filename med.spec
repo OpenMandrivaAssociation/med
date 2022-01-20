@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.1.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -130,6 +130,9 @@ rm -rf %{buildroot}%{_bindir}/testpy
 
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Fri Dec 03 2021 Sandro Mani <manisandro@gmail.com> - 4.1.0-3
 - Port to hdf5-1.12
 
