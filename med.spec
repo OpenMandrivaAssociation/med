@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.1.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -87,7 +87,7 @@ mv ChangeLog.new ChangeLog
 %cmake -DMEDFILE_BUILD_PYTHON=1 \
     -DPYTHON_EXECUTABLE=%{__python3} \
     -DPYTHON_INCLUDE_DIR=%{_includedir}/python%{python3_version}$(python3-config --abiflags)/ \
-    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}$(python3-config --abiflags).so  .
+    -DPYTHON_LIBRARY=%{_libdir}/libpython%{python3_version}$(python3-config --abiflags).so
 %cmake_build
 
 
@@ -130,6 +130,9 @@ rm -rf %{buildroot}%{_bindir}/testpy
 
 
 %changelog
+* Sat Mar 05 2022 Sandro Mani <manisandro@gmail.com> - 4.1.0-8
+- Fix FTBFS with cmake 3.23.0
+
 * Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
