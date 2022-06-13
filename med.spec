@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.1.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -130,6 +130,9 @@ rm -rf %{buildroot}%{_bindir}/testpy
 
 
 %changelog
+* Mon Jun 13 2022 Python Maint <python-maint@redhat.com> - 4.1.0-9
+- Rebuilt for Python 3.11
+
 * Sat Mar 05 2022 Sandro Mani <manisandro@gmail.com> - 4.1.0-8
 - Fix FTBFS with cmake 3.23.0
 
