@@ -1,6 +1,6 @@
 Name:           med
 Version:        4.1.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Library to exchange meshed data
 
 License:        LGPLv3+
@@ -130,6 +130,9 @@ rm -rf %{buildroot}%{_bindir}/testpy
 
 
 %changelog
+* Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.0-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Mon Jun 13 2022 Python Maint <python-maint@redhat.com> - 4.1.0-9
 - Rebuilt for Python 3.11
 
