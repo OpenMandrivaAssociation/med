@@ -25,7 +25,7 @@
 Summary:	Library to exchange meshed data
 Name:		med
 Version:	5.0.0
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	LGPLv3.0+
 URL:		https://www.salome-platform.org/
